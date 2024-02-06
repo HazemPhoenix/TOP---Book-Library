@@ -34,39 +34,46 @@ function Book(name, author, pages, readStatus) {
   };
 }
 
+const makeBookCard = (book, i) => {
+  const card = document.createElement("div");
+  card.classList = "card";
+
+  const bookName = document.createElement("p");
+  bookName.textContent = book.name;
+
+  const bookAuthor = document.createElement("p");
+  bookAuthor.textContent = book.author;
+
+  const bookPages = document.createElement("p");
+  bookPages.textContent = book.pages;
+
+  const bookReadStatus = document.createElement("p");
+  bookReadStatus.textContent = book.readStatus;
+
+  const remove = document.createElement("button");
+  remove.textContent = "Remove";
+  remove.classList = "remove-btn";
+  remove.setAttribute("data-index", i);
+  remove.addEventListener("click", removeBook);
+
+  const editStatus = document.createElement("button");
+  editStatus.textContent = "Change Status";
+  editStatus.classList = "editStatBtn";
+  editStatus.setAttribute("data-index", i);
+  editStatus.addEventListener("click", changeStatus);
+
+  card.appendChild(bookName);
+  card.appendChild(bookAuthor);
+  card.appendChild(bookPages);
+  card.appendChild(bookReadStatus);
+  card.appendChild(remove);
+  card.appendChild(editStatus);
+  return card;
+};
+
 const displayBooks = (bookList) => {
   for (let i = 0; i < bookList.length; i++) {
-    const card = document.createElement("div");
-    card.classList = "card";
-    const bookName = document.createElement("p");
-    bookName.textContent = bookList[i].name;
-    const bookAuthor = document.createElement("p");
-    bookAuthor.textContent = bookList[i].author;
-    const bookPages = document.createElement("p");
-    bookPages.textContent = bookList[i].pages;
-    const bookReadStatus = document.createElement("p");
-    bookReadStatus.textContent = bookList[i].readStatus;
-    const remove = document.createElement("button");
-    remove.textContent = "Remove";
-    remove.classList = "remove-btn";
-    remove.setAttribute("data-index", i);
-
-    const editStatus = document.createElement("button");
-    editStatus.textContent = "Change Status";
-    editStatus.classList = "editStatBtn";
-    editStatus.setAttribute("data-index", i);
-
-    editStatus.addEventListener("click", changeStatus);
-    remove.addEventListener("click", removeBook);
-
-    card.appendChild(bookName);
-    card.appendChild(bookAuthor);
-    card.appendChild(bookPages);
-    card.appendChild(bookReadStatus);
-    card.appendChild(remove);
-    card.appendChild(editStatus);
-
-    container.appendChild(card);
+    container.appendChild(makeBookCard(bookList[i], i));
   }
 };
 
@@ -109,7 +116,7 @@ addBook.addEventListener("click", (e) => {
     bookPages.value,
     bookReadStatus
   );
-  console.log(book);
+
   container.innerHTML = "";
   addBookToLibrary(book);
   dialog.close();
