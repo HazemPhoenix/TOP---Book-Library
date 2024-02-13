@@ -75,59 +75,53 @@ class BookCard {
     this.card.appendChild(this.editStatus);
     return this.card;
   }
-  
-removeBook  (e) {
-    const bookIndex = parseInt(e.target.getAttribute("data-index"), 10);
-    if (!isNaN(bookIndex)) {
-      myLibrary.splice(bookIndex, 1);
-    }
-    container.innerHTML = "";
-    displayBooks(myLibrary);
-  };
-changeStatus (e)  {
-    const bookIndex = parseInt(e.target.getAttribute("data-index"), 10);
-    myLibrary[bookIndex].changeStatus();
-    container.innerHTML = "";
-    displayBooks(myLibrary);
-  };
 }
 
-const makeBookCard = (book, i) => {
-  const displayBooks = (bookList) => {
-    for (let i = 0; i < bookList.length; i++) {
-      container.appendChild(makeBookCard(bookList[i], i));
-    }
-  };
+const displayBooks = (bookList) => {
+  for (let i = 0; i < bookList.length; i++) {
+    container.appendChild(new BookCard(bookList[i], i));
+  }
+};
 
-  function addBookToLibrary(book) {
-    myLibrary.push(book);
-    displayBooks(myLibrary);
+function addBookToLibrary(book) {
+  myLibrary.push(book);
+  displayBooks(myLibrary);
+}
+const removeBook = (e) => {
+  const bookIndex = parseInt(e.target.getAttribute("data-index"), 10);
+  if (!isNaN(bookIndex)) {
+    myLibrary.splice(bookIndex, 1);
+  }
+  container.innerHTML = "";
+  displayBooks(myLibrary);
+};
+const changeStatus = (e) => {
+  const bookIndex = parseInt(e.target.getAttribute("data-index"), 10);
+  myLibrary[bookIndex].changeStatus();
+  container.innerHTML = "";
+  displayBooks(myLibrary);
+};
+
+addBook.addEventListener("click", (e) => {
+  e.preventDefault();
+
+  const bookReadStatus = document.querySelector(
+    'input[name="status"]:checked'
+  ).value;
+
+  if (!bookName.value || !bookAuthor.value || !bookPages.value) {
+    alert("Please fill in all fields before adding the book.");
+    return;
   }
 
+  const book = new Book(
+    bookName.value,
+    bookAuthor.value,
+    bookPages.value,
+    bookReadStatus
+  );
 
-  const 
-
-  addBook.addEventListener("click", (e) => {
-    e.preventDefault();
-
-    const bookReadStatus = document.querySelector(
-      'input[name="status"]:checked'
-    ).value;
-
-    if (!bookName.value || !bookAuthor.value || !bookPages.value) {
-      alert("Please fill in all fields before adding the book.");
-      return;
-    }
-
-    const book = new Book(
-      bookName.value,
-      bookAuthor.value,
-      bookPages.value,
-      bookReadStatus
-    );
-
-    container.innerHTML = "";
-    addBookToLibrary(book);
-    dialog.close();
-  });
-};
+  container.innerHTML = "";
+  addBookToLibrary(book);
+  dialog.close();
+});
