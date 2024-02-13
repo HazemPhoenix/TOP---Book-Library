@@ -24,15 +24,44 @@ class Book {
     this.pages = pages;
     this.readStatus = readStatus;
   }
+
   info() {
     return `${this.name} by ${this.author}, ${this.pages} pages, ${this.readStatus}`;
   }
+
   changeStatus() {
-    if (this.readStatus == "Read") {
+    if (this.readStatus === "Read") {
       this.readStatus = "Not Yet Read";
     } else {
       this.readStatus = "Read";
     }
+  }
+
+  displayBook(bookList) {
+    for (let i = 0; i < bookList.length; i++) {
+      container.appendChild(new BookCard(bookList[i], i));
+    }
+  }
+
+  addBookToLibrary(book) {
+    myLibrary.push(book);
+    this.displayBook(myLibrary);
+  }
+
+  removeBook(e) {
+    const bookIndex = parseInt(e.target.getAttribute("data-index"), 10);
+    if (!isNaN(bookIndex)) {
+      myLibrary.splice(bookIndex, 1);
+    }
+    container.innerHTML = "";
+    this.displayBook(myLibrary);
+  }
+
+  changeStatusWithEvent(e) {
+    const bookIndex = parseInt(e.target.getAttribute("data-index"), 10);
+    myLibrary[bookIndex].changeStatus();
+    container.innerHTML = "";
+    this.displayBook(myLibrary);
   }
 }
 
@@ -47,7 +76,7 @@ class BookCard {
     this.bookName.textContent = book.name;
 
     this.bookAuthor = document.createElement("p");
-    this.textContent = book.author;
+    this.bookAuthor.textContent = book.author;
 
     this.bookPages = document.createElement("p");
     this.bookPages.textContent = book.pages;
@@ -59,13 +88,17 @@ class BookCard {
     this.remove.textContent = "Remove";
     this.remove.classList = "remove-btn";
     this.remove.setAttribute("data-index", i);
-    this.remove.addEventListener("click", removeBook);
+    this.remove.addEventListener("click", (e) => {
+      book.removeBook(e);
+    });
 
     this.editStatus = document.createElement("button");
     this.editStatus.textContent = "Change Status";
     this.editStatus.classList = "editStatBtn";
     this.editStatus.setAttribute("data-index", i);
-    this.editStatus.addEventListener("click", changeStatus);
+    this.editStatus.addEventListener("click", (e) => {
+      book.changeStatusWithEvent(e);
+    });
 
     this.card.appendChild(this.bookName);
     this.card.appendChild(this.bookAuthor);
@@ -76,31 +109,6 @@ class BookCard {
     return this.card;
   }
 }
-
-const displayBooks = (bookList) => {
-  for (let i = 0; i < bookList.length; i++) {
-    container.appendChild(new BookCard(bookList[i], i));
-  }
-};
-
-function addBookToLibrary(book) {
-  myLibrary.push(book);
-  displayBooks(myLibrary);
-}
-const removeBook = (e) => {
-  const bookIndex = parseInt(e.target.getAttribute("data-index"), 10);
-  if (!isNaN(bookIndex)) {
-    myLibrary.splice(bookIndex, 1);
-  }
-  container.innerHTML = "";
-  displayBooks(myLibrary);
-};
-const changeStatus = (e) => {
-  const bookIndex = parseInt(e.target.getAttribute("data-index"), 10);
-  myLibrary[bookIndex].changeStatus();
-  container.innerHTML = "";
-  displayBooks(myLibrary);
-};
 
 addBook.addEventListener("click", (e) => {
   e.preventDefault();
@@ -122,6 +130,6 @@ addBook.addEventListener("click", (e) => {
   );
 
   container.innerHTML = "";
-  addBookToLibrary(book);
+  book.addBookToLibrary(book);
   dialog.close();
 });
