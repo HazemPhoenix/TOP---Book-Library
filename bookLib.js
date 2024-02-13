@@ -17,21 +17,33 @@ cancel.addEventListener("click", () => {
 
 const myLibrary = [];
 
-function Book(name, author, pages, readStatus) {
-  this.name = name;
-  this.author = author;
-  this.pages = pages;
-  this.readStatus = readStatus;
-  this.info = () => {
+// function Book(name, author, pages, readStatus) {
+//   this.name = name;
+//   this.author = author;
+//   this.pages = pages;
+//   this.readStatus = readStatus;
+//   this.info = () => {
+//     return `${this.name} by ${this.author}, ${this.pages} pages, ${this.readStatus}`;
+//   };
+// }
+
+class Book {
+  constructor(name, author, pages, readStatus) {
+    this.name = name;
+    this.author = author;
+    this.pages = pages;
+    this.readStatus = readStatus;
+  }
+  info() {
     return `${this.name} by ${this.author}, ${this.pages} pages, ${this.readStatus}`;
-  };
-  this.changeStatus = () => {
+  }
+  changeStatus() {
     if (this.readStatus == "Read") {
       this.readStatus = "Not Yet Read";
     } else {
       this.readStatus = "Read";
     }
-  };
+  }
 }
 
 const makeBookCard = (book, i) => {
