@@ -17,16 +17,6 @@ cancel.addEventListener("click", () => {
 
 const myLibrary = [];
 
-// function Book(name, author, pages, readStatus) {
-//   this.name = name;
-//   this.author = author;
-//   this.pages = pages;
-//   this.readStatus = readStatus;
-//   this.info = () => {
-//     return `${this.name} by ${this.author}, ${this.pages} pages, ${this.readStatus}`;
-//   };
-// }
-
 class Book {
   constructor(name, author, pages, readStatus) {
     this.name = name;
@@ -46,90 +36,98 @@ class Book {
   }
 }
 
-const makeBookCard = (book, i) => {
-  const card = document.createElement("div");
-  card.classList = "card";
+class BookCard {
+  constructor(book, i) {
+    this.book = book;
+    this.bookIndex = i;
+    this.card = document.createElement("div");
+    this.card.classList = "card";
 
-  const bookName = document.createElement("p");
-  bookName.textContent = book.name;
+    this.bookName = document.createElement("p");
+    this.bookName.textContent = book.name;
 
-  const bookAuthor = document.createElement("p");
-  bookAuthor.textContent = book.author;
+    this.bookAuthor = document.createElement("p");
+    this.textContent = book.author;
 
-  const bookPages = document.createElement("p");
-  bookPages.textContent = book.pages;
+    this.bookPages = document.createElement("p");
+    this.bookPages.textContent = book.pages;
 
-  const bookReadStatus = document.createElement("p");
-  bookReadStatus.textContent = book.readStatus;
+    this.bookReadStatus = document.createElement("p");
+    this.bookReadStatus.textContent = book.readStatus;
 
-  const remove = document.createElement("button");
-  remove.textContent = "Remove";
-  remove.classList = "remove-btn";
-  remove.setAttribute("data-index", i);
-  remove.addEventListener("click", removeBook);
+    this.remove = document.createElement("button");
+    this.remove.textContent = "Remove";
+    this.remove.classList = "remove-btn";
+    this.remove.setAttribute("data-index", i);
+    this.remove.addEventListener("click", removeBook);
 
-  const editStatus = document.createElement("button");
-  editStatus.textContent = "Change Status";
-  editStatus.classList = "editStatBtn";
-  editStatus.setAttribute("data-index", i);
-  editStatus.addEventListener("click", changeStatus);
+    this.editStatus = document.createElement("button");
+    this.editStatus.textContent = "Change Status";
+    this.editStatus.classList = "editStatBtn";
+    this.editStatus.setAttribute("data-index", i);
+    this.editStatus.addEventListener("click", changeStatus);
 
-  card.appendChild(bookName);
-  card.appendChild(bookAuthor);
-  card.appendChild(bookPages);
-  card.appendChild(bookReadStatus);
-  card.appendChild(remove);
-  card.appendChild(editStatus);
-  return card;
-};
-
-const displayBooks = (bookList) => {
-  for (let i = 0; i < bookList.length; i++) {
-    container.appendChild(makeBookCard(bookList[i], i));
+    this.card.appendChild(this.bookName);
+    this.card.appendChild(this.bookAuthor);
+    this.card.appendChild(this.bookPages);
+    this.card.appendChild(this.bookReadStatus);
+    this.card.appendChild(this.remove);
+    this.card.appendChild(this.editStatus);
+    return this.card;
   }
-};
-
-function addBookToLibrary(book) {
-  myLibrary.push(book);
-  displayBooks(myLibrary);
+  
+removeBook  (e) {
+    const bookIndex = parseInt(e.target.getAttribute("data-index"), 10);
+    if (!isNaN(bookIndex)) {
+      myLibrary.splice(bookIndex, 1);
+    }
+    container.innerHTML = "";
+    displayBooks(myLibrary);
+  };
+changeStatus (e)  {
+    const bookIndex = parseInt(e.target.getAttribute("data-index"), 10);
+    myLibrary[bookIndex].changeStatus();
+    container.innerHTML = "";
+    displayBooks(myLibrary);
+  };
 }
 
-const removeBook = (e) => {
-  const bookIndex = parseInt(e.target.getAttribute("data-index"), 10);
-  if (!isNaN(bookIndex)) {
-    myLibrary.splice(bookIndex, 1);
-  }
-  container.innerHTML = "";
-  displayBooks(myLibrary);
-};
+const makeBookCard = (book, i) => {
+  const displayBooks = (bookList) => {
+    for (let i = 0; i < bookList.length; i++) {
+      container.appendChild(makeBookCard(bookList[i], i));
+    }
+  };
 
-const changeStatus = (e) => {
-  const bookIndex = parseInt(e.target.getAttribute("data-index"), 10);
-  myLibrary[bookIndex].changeStatus();
-  container.innerHTML = "";
-  displayBooks(myLibrary);
-};
-
-addBook.addEventListener("click", (e) => {
-  e.preventDefault();
-
-  const bookReadStatus = document.querySelector(
-    'input[name="status"]:checked'
-  ).value;
-
-  if (!bookName.value || !bookAuthor.value || !bookPages.value) {
-    alert("Please fill in all fields before adding the book.");
-    return;
+  function addBookToLibrary(book) {
+    myLibrary.push(book);
+    displayBooks(myLibrary);
   }
 
-  const book = new Book(
-    bookName.value,
-    bookAuthor.value,
-    bookPages.value,
-    bookReadStatus
-  );
 
-  container.innerHTML = "";
-  addBookToLibrary(book);
-  dialog.close();
-});
+  const 
+
+  addBook.addEventListener("click", (e) => {
+    e.preventDefault();
+
+    const bookReadStatus = document.querySelector(
+      'input[name="status"]:checked'
+    ).value;
+
+    if (!bookName.value || !bookAuthor.value || !bookPages.value) {
+      alert("Please fill in all fields before adding the book.");
+      return;
+    }
+
+    const book = new Book(
+      bookName.value,
+      bookAuthor.value,
+      bookPages.value,
+      bookReadStatus
+    );
+
+    container.innerHTML = "";
+    addBookToLibrary(book);
+    dialog.close();
+  });
+};
